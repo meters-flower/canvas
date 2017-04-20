@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>变形</title>
+</head>
+<body  onload="draw();">
+	<h3>在做变形之前先保存状态是一个良好的习惯。大多数情况下，调用 restore 方法比手动恢复原先的状态要简单得多。否则可能会发现有些东西不见了</h3>
+	<dl>
+		<dt>移动</dt>
+		<dd>translate(x, y) 移动 canvas 和它的原点到一个不同的位置</dd>
+		<dd><canvas id="canvas1" width="300" height="300"></canvas></dd>
+
+		<dt>旋转</dt>
+		<dd>
+			rotate(angle) 旋转的角度(angle)参数，它是顺时针方向的，以弧度为单位的值。
+			<p>旋转的中心点始终是 canvas 的原点,可通过translate改变 </p>
+		</dd>		
+
+		<dt>缩放</dt>
+		<dd>scale(x, y)</dd>
+
+		<dt>变形</dt>
+		<dd>	
+			transform(m11, m12, m21, m22, dx, dy)
+			<ul>
+				<li>m11：水平方向的缩放</li>
+				<li>m12：水平方向的偏移</li>
+				<li>m21：竖直方向的偏移</li>
+				<li>m22：竖直方向的缩放</li>
+				<li>dx：水平方向的移动</li>
+				<li>dy：竖直方向的移动</li>
+			</ul>
+		</dd>
+	</dl>
+
+	<script type="text/javascript">
+		function draw() {
+		  var ctx = document.getElementById('canvas1').getContext('2d');
+		  ctx.fillRect(0,0,300,300);
+		  for (var i=0;i<3;i++) {
+		    for (var j=0;j<3;j++) {
+		      ctx.save();
+		      ctx.strokeStyle = "#9CFF00";
+		      ctx.translate(50+j*100,50+i*100);
+		      drawSpirograph(ctx,20*(j+2)/(j+1),-8*(i+3)/(i+1),10);
+		      ctx.restore();
+		    }
+		  }
+		}
+		function drawSpirograph(ctx,R,r,O){/* 绘制螺旋（spirograph）图案 */
+		  var x1 = R-O;
+		  var y1 = 0;
+		  var i  = 1;
+		  ctx.beginPath();
+		  ctx.moveTo(x1,y1);
+		  do {
+		    if (i>20000) break;
+		    var x2 = (R+r)*Math.cos(i*Math.PI/72) - (r+O)*Math.cos(((R+r)/r)*(i*Math.PI/72))
+		    var y2 = (R+r)*Math.sin(i*Math.PI/72) - (r+O)*Math.sin(((R+r)/r)*(i*Math.PI/72))
+		    ctx.lineTo(x2,y2);
+		    x1 = x2;
+		    y1 = y2;
+		    i++;
+		  } while (x2 != R-O && y2 != 0 );
+		  ctx.stroke();
+		}
+
+	</script>
+</body>
+</html>
