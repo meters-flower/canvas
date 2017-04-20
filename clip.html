@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>合成与剪切</title>
+</head>
+<body  onload="draw();">
+	<dl>
+		<dt>合成</dt>
+		<dd>
+			globalCompositeOperation = type  ,type有12个可选值 
+			<p>我们不仅可以在已有图形后面再画新图形，还可以用来遮盖指定区域，清除画布中的某些部分</p>
+		</dd>
+
+		<dt>裁切路径 </dt>
+		<dd>clip() 裁切路径作用是遮罩，裁切路径外的不会在 canvas 上绘制出来</dd>
+	</dl>
+	<canvas id="canvas"></canvas>
+	<script type="text/javascript">
+		function draw() {
+		  var ctx = document.getElementById('canvas').getContext('2d');
+		  ctx.fillRect(0,0,150,150);
+		  ctx.translate(75,75);
+
+		  // Create a circular clipping path
+		  ctx.beginPath();
+		  ctx.arc(0,0,60,0,Math.PI*2,true);
+		  ctx.clip();
+
+		  // draw background
+		  var lingrad = ctx.createLinearGradient(0,-75,0,75);
+		  lingrad.addColorStop(0, '#232256');
+		  lingrad.addColorStop(1, '#143778');
+		  
+		  ctx.fillStyle = lingrad;
+		  ctx.fillRect(-75,-75,150,150);
+
+		  // draw stars
+		  for (var j=1;j<50;j++){
+		    ctx.save();
+		    ctx.fillStyle = '#fff';
+		    ctx.translate(75-Math.floor(Math.random()*150),
+		                  75-Math.floor(Math.random()*150));
+		    drawStar(ctx,Math.floor(Math.random()*4)+2);
+		    ctx.restore();
+		  }
+		  
+		}
+		function drawStar(ctx,r){
+		  ctx.save();
+		  ctx.beginPath()
+		  ctx.moveTo(r,0);
+		  for (var i=0;i<9;i++){
+		    ctx.rotate(Math.PI/5);
+		    if(i%2 == 0) {
+		      ctx.lineTo((r/0.525731)*0.200811,0);
+		    } else {
+		      ctx.lineTo(r,0);
+		    }
+		  }
+		  ctx.closePath();
+		  ctx.fill();
+		  ctx.restore();
+		}
+
+	</script>
+</body>
+</html>
